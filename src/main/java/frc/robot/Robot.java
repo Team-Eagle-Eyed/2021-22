@@ -29,9 +29,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    double speedController = m_stick.getRawAxis(3);
+    double speed1 = speedController - 1;
+    double speed = speed1 / 2;
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
-    m_robotDrive.arcadeDrive(-m_stick.getY(), m_stick.getX());
+    m_robotDrive.arcadeDrive(m_stick.getY() * speed, -m_stick.getX() * speed);
   }
 }
