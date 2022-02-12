@@ -1,30 +1,57 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
 
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
-/**
- * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
- * arcade steering.
- */
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 public class Robot extends TimedRobot {
-  private final PWMSparkMax m_leftMotor = new PWMSparkMax(1);
-  private final PWMSparkMax m_rightMotor = new PWMSparkMax(0);
-  private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  private final Joystick m_stick = new Joystick(0);
+  private DifferentialDrive m_myRobot;
+  private Joystick m_stick;
+  private static final int leftDeviceID = 1; 
+  private static final int rightDeviceID = 2;
+  private CANSparkMax m_leftMotor;
+  private CANSparkMax m_rightMotor;
 
   @Override
   public void robotInit() {
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
-    m_leftMotor.setInverted(true);
+  /**
+   * SPARK MAX controllers are intialized over CAN by constructing a CANSparkMax object
+   * 
+   * The CAN ID, which can be configured using the SPARK MAX Client, is passed as the
+   * first parameter
+   * 
+   * The motor type is passed as the second parameter. Motor type can either be:
+   *  com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless
+   *  com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed
+   * 
+   * The example below initializes four brushless motors with CAN IDs 1 and 2. Change
+   * these parameters to match your setup
+   */
+    m_leftMotor = new CANSparkMax(leftDeviceID, MotorType.kBrushless);
+    m_rightMotor = new CANSparkMax(rightDeviceID, MotorType.kBrushless);
+
+    /**
+     * The RestoreFactoryDefaults method can be used to reset the configuration parameters
+     * in the SPARK MAX to their factory default state. If no argument is passed, these
+     * parameters will not persist between power cycles
+     */
+    m_leftMotor.restoreFactoryDefaults();
+    m_rightMotor.restoreFactoryDefaults();
+
+    m_myRobot = new DifferentialDrive(m_leftMotor, m_rightMotor);
+
+    m_stick = new Joystick(0);
+    m_rightMotor.setInverted(true);
   }
 
   @Override
@@ -32,9 +59,7 @@ public class Robot extends TimedRobot {
     double speedController = m_stick.getRawAxis(3);
     double speed1 = speedController - 1;
     double speed = speed1 / 2;
-    // Drive with arcade drive.
-    // That means that the Y axis drives forward
-    // and backward, and the X turns left and right.
-    m_robotDrive.arcadeDrive(m_stick.getY() * speed, -m_stick.getX() * speed);
+
+    m_myRobot.arcadeDrive(m_stick.getY() * speed, -m_stick.getX() * speed);
   }
 }
