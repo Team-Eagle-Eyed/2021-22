@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
     if(Math.abs(leftArmSpeed) > 0.15) { //left arm deadband
       m_leftArm.set(leftArmSpeed);
     } else {
-      m_leftArm.set(0);
+      m_leftArm.set(0); 
     }
 
     if(Math.abs(rightArmSpeed) > 0.15) { //right arm deadband
