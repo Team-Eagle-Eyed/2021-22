@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.TimedRobot;
+
 public class Robot extends TimedRobot {
   private DifferentialDrive m_myRobot;
   private Joystick m_driveStick;
@@ -63,6 +66,8 @@ public class Robot extends TimedRobot {
     m_armController = new Joystick(1);
     m_rightMotor.setInverted(true);
     m_leftArm.setInverted(true);
+
+    CameraServer.startAutomaticCapture();
   }
 
   @Override
