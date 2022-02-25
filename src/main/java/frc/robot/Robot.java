@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
+import com.fasterxml.jackson.core.io.OutputDecorator;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
   double rightArmOut = 0;
 
   double autoStart = 0;
+  boolean runAuto = true;
 
   @Override
   public void robotInit() {
@@ -42,11 +44,13 @@ public class Robot extends TimedRobot {
     m_rightMotor = new CANSparkMax(rightDriveID, MotorType.kBrushless);
     m_leftArm = new CANSparkMax(leftArmID, MotorType.kBrushless);
     m_rightArm = new CANSparkMax(rightArmID, MotorType.kBrushless);
-    m_intakeArm = new PWMSparkMax(7); //pwm cause mentor asked for it
-    m_intake = new PWMSparkMax(8); //pwm cause mentor asked for it
+    m_intakeArm = new PWMSparkMax(8); //pwm cause mentor asked for it
+    m_intake = new PWMSparkMax(9); //pwm cause mentor asked for it
 
     m_rightArm.setOpenLoopRampRate(0.1);
     m_leftArm.setOpenLoopRampRate(0.1);
+    m_rightMotor.setOpenLoopRampRate(0.1);
+    m_leftMotor.setOpenLoopRampRate(0.1);
     m_rightArm.setIdleMode(IdleMode.kBrake);
     m_leftArm.setIdleMode(IdleMode.kBrake);
 
@@ -54,8 +58,9 @@ public class Robot extends TimedRobot {
 
     driveStick = new Joystick(0); //big joystick thing
     armGamepad = new Joystick(1); //small standard console controller
-    m_rightMotor.setInverted(true); //backwards, to add more confusion
     m_leftArm.setInverted(true); // backwards, to add more confusion
+    m_leftMotor.setInverted(false);
+    m_rightMotor.setInverted(true);
 
     CameraServer.startAutomaticCapture(); //woo I have eyes
   }
@@ -127,9 +132,9 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     //get a time for auton start to do events based on time later
     double autoTimeElapsed = Timer.getFPGATimestamp() - autoStart; //get time since start of auto
-    if(autoTimeElapsed < 3) { //move for 3 seconds
-      m_leftMotor.set(0.5);
-      m_rightMotor.set(0.5);
+    if(autoTimeElapsed < 2.5) { //move for 3 seconds
+      m_leftMotor.set(0.25);
+      m_rightMotor.set(0.25);
     } else {
       m_leftMotor.set(0);
       m_rightMotor.set(0);
