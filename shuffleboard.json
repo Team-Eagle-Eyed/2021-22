@@ -1,0 +1,190 @@
+{
+  "tabPane": [
+    {
+      "title": "SmartDashboard",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "2,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": 0,
+              "imageHeight": 0
+            }
+          },
+          "5,0": {
+            "size": [
+              4,
+              3
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Speeds",
+              "Layout/Number of columns": 4,
+              "Layout/Number of rows": 2,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_rightMotor",
+                  "_title": "m_rightMotor",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "0,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_leftArm",
+                  "_title": "m_leftArm",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "1,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_leftMotor",
+                  "_title": "m_leftMotor",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "1,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_rightArm",
+                  "_title": "m_rightArm",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "2,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_intake",
+                  "_title": "m_intake",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "3,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_intakeArm",
+                  "_title": "m_intakeArm",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "3,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/speedController",
+                  "_title": "speedController",
+                  "Range/Min": 0.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                }
+              }
+            }
+          },
+          "0,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Sections",
+              "Layout/Number of columns": 2,
+              "Layout/Number of rows": 2,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/driveEnabled",
+                  "_title": "driveEnabled"
+                },
+                "1,0": {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/armsEnabled",
+                  "_title": "armsEnabled"
+                },
+                "0,1": {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/intakeEnabled",
+                  "_title": "intakeEnabled"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "LiveWindow",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "LiveWindow/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Ungrouped",
+              "_title": "Ungrouped",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PWMSparkMax[9]/Value",
+                  "_title": "PWMSparkMax[9]/Value"
+                },
+                {
+                  "_type": "Differential Drivebase",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DifferentialDrive[1]",
+                  "_title": "DifferentialDrive[1]",
+                  "Wheels/Number of wheels": 4,
+                  "Wheels/Wheel diameter": 80.0,
+                  "Visuals/Show velocity vectors": true
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PWMSparkMax[8]/Value",
+                  "_title": "PWMSparkMax[8]/Value"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": -4.800000190734863,
+    "y": 0.800000011920929,
+    "width": 1547.199951171875,
+    "height": 628.0
+  }
+}
