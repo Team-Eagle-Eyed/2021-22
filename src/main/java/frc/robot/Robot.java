@@ -10,11 +10,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
@@ -36,12 +34,13 @@ public class Robot extends TimedRobot {
   double leftArmOut = 0;
   double rightArmOut = 0;
 
-  double autoStart = 0;
+  double autoStartTime = 0;
   boolean runAuto = true;
+
+  double teleopStartTime = 0;
 
   @Override
   public void robotInit() {
-
     m_leftMotor = new CANSparkMax(leftDriveID, MotorType.kBrushless); //woo canbus stuff
     m_rightMotor = new CANSparkMax(rightDriveID, MotorType.kBrushless);
     m_leftArm = new CANSparkMax(leftArmID, MotorType.kBrushless);
@@ -79,6 +78,16 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void disabledPeriodic() {
+    //nothing yet
+  }
+
+  @Override
+  public void teleopInit() {
+    teleopStartTime = Timer.getFPGATimestamp();
+  }
+
+  @Override
   public void teleopPeriodic() {
     SmartDashboard.putNumber("m_leftArm", m_leftArm.get());
     SmartDashboard.putNumber("m_rightArm", m_rightArm.get());
@@ -86,6 +95,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("m_rightMotor", m_rightMotor.get());
     SmartDashboard.putNumber("m_intakeArm", m_intakeArm.get());
     SmartDashboard.putNumber("m_intake", m_intake.get());
+
+    double teleopTimeElapsed = Timer.getFPGATimestamp() - teleopStartTime;
 
     double speedController = driveStick.getRawAxis(3); //little dial thing on the front of the controller
     double speed1 = speedController - 1; //maths
@@ -168,14 +179,21 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    autoStart = Timer.getFPGATimestamp();
+    autoStartTime = Timer.getFPGATimestamp();
   }
 
 
   @Override
   public void autonomousPeriodic() {
+    SmartDashboard.putNumber("m_leftArm", m_leftArm.get());
+    SmartDashboard.putNumber("m_rightArm", m_rightArm.get());
+    SmartDashboard.putNumber("m_leftMotor", m_leftMotor.get());
+    SmartDashboard.putNumber("m_rightMotor", m_rightMotor.get());
+    SmartDashboard.putNumber("m_intakeArm", m_intakeArm.get());
+    SmartDashboard.putNumber("m_intake", m_intake.get());
+    
     //get a time for auton start to do events based on time later
-    double autoTimeElapsed = Timer.getFPGATimestamp() - autoStart; //get time since start of auto
+    double autoTimeElapsed = Timer.getFPGATimestamp() - autoStartTime; //get time since start of auto
     if(autoTimeElapsed < 2.5) { //move for 3 seconds
       m_leftMotor.set(0.25);
       m_rightMotor.set(0.25);

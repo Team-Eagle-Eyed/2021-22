@@ -2,19 +2,19 @@
   "tabPane": [
     {
       "title": "SmartDashboard",
-      "autoPopulate": true,
+      "autoPopulate": false,
       "autoPopulatePrefix": "SmartDashboard/",
       "widgetPane": {
-        "gridSize": 128.0,
+        "gridSize": 64.0,
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
+        "titleType": 1,
         "tiles": {
-          "2,0": {
+          "0,0": {
             "size": [
-              3,
-              3
+              8,
+              6
             ],
             "content": {
               "_type": "Camera Stream",
@@ -30,81 +30,10 @@
               "imageHeight": 0
             }
           },
-          "5,0": {
+          "9,0": {
             "size": [
-              4,
+              3,
               3
-            ],
-            "content": {
-              "_type": "Grid Layout",
-              "_title": "Speeds",
-              "Layout/Number of columns": 4,
-              "Layout/Number of rows": 2,
-              "Layout/Label position": "BOTTOM",
-              "_children": {
-                "0,0": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/m_rightMotor",
-                  "_title": "m_rightMotor",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "0,1": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/m_leftArm",
-                  "_title": "m_leftArm",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "1,0": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/m_leftMotor",
-                  "_title": "m_leftMotor",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "1,1": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/m_rightArm",
-                  "_title": "m_rightArm",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "2,0": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/m_intake",
-                  "_title": "m_intake",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "3,0": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/m_intakeArm",
-                  "_title": "m_intakeArm",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "3,1": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/speedController",
-                  "_title": "speedController",
-                  "Range/Min": 0.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                }
-              }
-            }
-          },
-          "0,0": {
-            "size": [
-              2,
-              2
             ],
             "content": {
               "_type": "Grid Layout",
@@ -129,6 +58,20 @@
                   "_title": "intakeEnabled"
                 }
               }
+            }
+          },
+          "9,3": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/speedController",
+              "_title": "speedController",
+              "Range/Min": 0.0,
+              "Range/Max": 1.0,
+              "Visuals/Show value": true
             }
           }
         }
@@ -173,8 +116,294 @@
                   "_type": "Text View",
                   "_source0": "network_table:///LiveWindow/Ungrouped/PWMSparkMax[8]/Value",
                   "_title": "PWMSparkMax[8]/Value"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan0",
+                  "_title": "PowerDistribution[0]/Chan0"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan1",
+                  "_title": "PowerDistribution[0]/Chan1"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan2",
+                  "_title": "PowerDistribution[0]/Chan2"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan3",
+                  "_title": "PowerDistribution[0]/Chan3"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan4",
+                  "_title": "PowerDistribution[0]/Chan4"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan5",
+                  "_title": "PowerDistribution[0]/Chan5"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan6",
+                  "_title": "PowerDistribution[0]/Chan6"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan7",
+                  "_title": "PowerDistribution[0]/Chan7"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan8",
+                  "_title": "PowerDistribution[0]/Chan8"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan9",
+                  "_title": "PowerDistribution[0]/Chan9"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Voltage",
+                  "_title": "PowerDistribution[0]/Voltage"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/TotalCurrent",
+                  "_title": "PowerDistribution[0]/TotalCurrent"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/SwitchableChannel",
+                  "_title": "PowerDistribution[0]/SwitchableChannel",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
                 }
               ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "FMSInfo",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "FMSInfo/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///FMSInfo/IsRedAlliance",
+              "_title": "IsRedAlliance",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "1,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///FMSInfo/MatchNumber",
+              "_title": "MatchNumber"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///FMSInfo/ReplayNumber",
+              "_title": "ReplayNumber"
+            }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///FMSInfo/FMSControlData",
+              "_title": "FMSControlData"
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///FMSInfo/EventName",
+              "_title": "EventName"
+            }
+          },
+          "5,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///FMSInfo/GameSpecificMessage",
+              "_title": "GameSpecificMessage"
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///FMSInfo/StationNumber",
+              "_title": "StationNumber"
+            }
+          },
+          "7,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///FMSInfo/MatchType",
+              "_title": "MatchType"
+            }
+          },
+          "2,1": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Basic FMS Info",
+              "_source0": "network_table:///FMSInfo",
+              "_title": "FMSInfo"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Data",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              4,
+              3
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Speeds",
+              "Layout/Number of columns": 4,
+              "Layout/Number of rows": 2,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_leftMotor",
+                  "_title": "m_leftMotor",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "0,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_leftArm",
+                  "_title": "m_leftArm",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "1,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_rightArm",
+                  "_title": "m_rightArm",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "3,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/speedController",
+                  "_title": "speedController",
+                  "Range/Min": 0.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "3,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_intake",
+                  "_title": "m_intake",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "2,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_intakeArm",
+                  "_title": "m_intakeArm",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "1,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_rightMotor",
+                  "_title": "m_rightMotor",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                }
+              }
+            }
+          },
+          "4,0": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           }
         }
