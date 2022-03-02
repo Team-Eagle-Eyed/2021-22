@@ -18,16 +18,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
   //variables galore
   private DifferentialDrive m_myRobot;
+  
   private Joystick driveStick;
   private Joystick armGamepad;
+
   private static final int leftDriveID = 1; 
   private static final int rightDriveID = 2;
   private static final int leftArmID = 3; 
   private static final int rightArmID = 4;
+
   private CANSparkMax m_leftMotor;
   private CANSparkMax m_rightMotor;
   private CANSparkMax m_leftArm;
   private CANSparkMax m_rightArm;
+
   private PWMSparkMax m_intakeArm;
   private PWMSparkMax m_intake;
 
@@ -98,7 +102,7 @@ public class Robot extends TimedRobot {
 
     double teleopTimeElapsed = Timer.getFPGATimestamp() - teleopStartTime;
 
-    double speedController = driveStick.getRawAxis(3); //little dial thing on the front of the controller
+    double speedController = driveStick.getRawAxis(3); //little "dial" thing on the front of the controller
     double speed1 = speedController - 1; //maths
     double speed = speed1 / 2; //more maths
     SmartDashboard.putNumber("speedController", speed * -1);
@@ -115,20 +119,20 @@ public class Robot extends TimedRobot {
     boolean armRB = armGamepad.getRawButton(6); //button 6 for right bumper
     boolean armLB = armGamepad.getRawButton(5); //button 5 for left bumper
 
-    if(armRB == true) {
+    if(armRB == true) { //retracts right arm, extends left. Note left arm is inverted.
       leftArmOut = -1;
       rightArmOut = 1;
-    } else if(armLB == true) {
+    } else if(armLB == true) { //retracts left arm, extends right. Note left arm is inverted.
       leftArmOut = 1;
       rightArmOut = -1;
-    } else if(armRB == false && armLB == false) {
-      if(Math.abs(leftArmSpeed) > 0.15) { //left arm deadband
+    } else if(armRB == false && armLB == false) { //if neither bumber is pressed, joysticks take over
+      if(Math.abs(leftArmSpeed) > 0.05) { //left arm deadband
         leftArmOut = leftArmSpeed;
       } else {
         leftArmOut = 0;//who is insane enough to put a comment without a space separating it from the code?
       }
   
-      if(Math.abs(rightArmSpeed) > 0.15) { //right arm deadband
+      if(Math.abs(rightArmSpeed) > 0.05) { //right arm deadband
         rightArmOut = rightArmSpeed;
       } else {
         rightArmOut = 0;
@@ -192,7 +196,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("m_intakeArm", m_intakeArm.get());
     SmartDashboard.putNumber("m_intake", m_intake.get());
     
-    //get a time for auton start to do events based on time later
+    //get a time for autonomous start to do events based on time later
     double autoTimeElapsed = Timer.getFPGATimestamp() - autoStartTime; //get time since start of auto
     if(autoTimeElapsed < 2.5) { //move for 3 seconds
       m_leftMotor.set(0.25);
