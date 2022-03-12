@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
@@ -32,8 +33,8 @@ public class Robot extends TimedRobot {
   private CANSparkMax m_leftArm;
   private CANSparkMax m_rightArm;
 
-  private PWMSparkMax m_intakeArm;
   private PWMSparkMax m_intake;
+  private VictorSP m_intakeArm;
 
   double leftArmOut = 0;
   double rightArmOut = 0;
@@ -42,7 +43,7 @@ public class Robot extends TimedRobot {
   Timer autoTimer;
   boolean runAuto = true;
   Double gamepadDeadband = .05; // I like to declare inline, especially for simple things
-  Double armFeedForward = .15;
+  int armFeedForward = 0;
 
   @Override
   public void robotInit() {
@@ -51,7 +52,7 @@ public class Robot extends TimedRobot {
     
     m_leftArm = new CANSparkMax(leftArmID, MotorType.kBrushless);
     m_rightArm = new CANSparkMax(rightArmID, MotorType.kBrushless);
-    m_intakeArm = new PWMSparkMax(8); //pwm cause mentor asked for it
+    m_intakeArm = new VictorSP(8); //pwm cause mentor asked for it
     m_intake = new PWMSparkMax(9); //pwm cause mentor asked for it
 
     m_rightArm.setOpenLoopRampRate(0.1); //ramp rate so the motor cant stall when jumping to full power
@@ -83,6 +84,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("m_intakeArm", 0);
     SmartDashboard.putNumber("m_intake", 0);
     SmartDashboard.putNumber("speedController", 0);
+    SmartDashboard.putNumber("armSpeedControl", 0.5);
   }
 
   @Override
@@ -108,7 +110,6 @@ public class Robot extends TimedRobot {
     double speedController = driveStick.getRawAxis(3); //little "dial" thing on the front of the controller
     double speed1 = speedController - 1; //maths
     double speed = speed1 / 2; //more maths
-    SmartDashboard.putNumber("speedController", speed * -1);
 
     if(SmartDashboard.getBoolean("driveEnabled", true) == true) {
       m_myRobot.arcadeDrive(driveStick.getY() * speed, -driveStick.getZ() * speed, true); // Use twist for turning.  Square inputs for better control at low speed.
@@ -142,35 +143,66 @@ public class Robot extends TimedRobot {
       m_rightArm.set(0);
     }
 
-    boolean armUp = armGamepad.getYButton();
-    boolean armDown = armGamepad.getAButton();
-    boolean intake = armGamepad.getXButton();
-    boolean intake2 = armGamepad.getBButton();
-    double intakeOut = 0;
-    double intakeArmOut = 0;
+    boolean o_armUp = armGamepad.getYButton();
+    boolean o_armDown = armGamepad.getAButton();
+    boolean o_intakeIn = armGamepad.getXButton();
+    boolean o_intakeOut = armGamepad.getBButton();
+    boolean d_armUp = (driveStick.getPOV() <= 45 || driveStick.getPOV() >= 315) && driveStick.getPOV() != -1;
+    boolean d_armDown = driveStick.getPOV() >= 135 && driveStick.getPOV() <=225;
+    boolean d_intakeIn = driveStick.getRawButton(2);
+    boolean d_intakeOut = driveStick.getRawButton(1);
+    double intakePowerOut = 0;
+    double intakeArmPowerOut = 0;
 
-    if(armUp) { //intake arm control
-      intakeArmOut = 0.5; //half speed cause I don't know how fast it will be yet
-    } else if(armDown) {
-      intakeArmOut = -0.5;
+    double armSpeed = SmartDashboard.getNumber("armSpeedControl", 0.5);
+
+    if(d_armUp || d_armDown) {
+      if(d_armUp) {
+        intakeArmPowerOut = armSpeed;
+      } else if(d_armDown) {
+        intakeArmPowerOut =-armSpeed;
+      } else {
+        intakeArmPowerOut = -0.05;
+//        m_intakeArm.setVoltage(-10);
+      }
     } else {
-      intakeArmOut = 0;
+      if(o_armUp) {
+        intakeArmPowerOut = armSpeed;
+      } else if(o_armDown) {
+        intakeArmPowerOut = -armSpeed;
+      } else {
+        intakeArmPowerOut = -0.05;
+//        m_intakeArm.setVoltage(-10);
+      }
     }
+
     if(SmartDashboard.getBoolean("intakeEnabled", true) == true) { //if intake enabled, set intake arm speed
-      m_intakeArm.set(intakeArmOut);
+      m_intakeArm.set(intakeArmPowerOut);
     } else {
       m_intakeArm.set(0);
     }
-    
-    if(intake) { //intake control
-      intakeOut = 0.5;
-    } else if(intake2) {
-      intakeOut = -0.5;
+
+
+    if(d_intakeIn || d_intakeOut) {
+      if(d_intakeIn) {
+        intakePowerOut = 1;
+      } else if(d_intakeOut) {
+        intakePowerOut = -1;
+      } else {
+        intakePowerOut = 0;
+      }
     } else {
-      intakeOut = 0;
+      if(o_intakeIn) {
+        intakePowerOut = 1;
+      } else if(o_intakeOut) {
+        intakePowerOut = -1;
+      } else {
+        intakePowerOut = 0;
+      }
     }
+
     if(SmartDashboard.getBoolean("intakeEnabled", true) == true) { //if intake enabled, set intake speed
-      m_intake.set(intakeOut);
+      m_intake.set(intakePowerOut);
     } else {
       m_intake.set(0);
     }
@@ -194,12 +226,15 @@ public class Robot extends TimedRobot {
     
     //get a time for autonomous start to do events based on time later
     double autoTimeElapsed = autoTimer.get(); //get time since start of auto
-    if(autoTimeElapsed < 2.5) { //move for 3 seconds
-      m_leftMotor.set(0.25);
-      m_rightMotor.set(0.25);
+    if(autoTimeElapsed < 1) { //move for 3 seconds
+      m_intake.set(-1);
+    } else if(autoTimeElapsed < 4.5) {
+      m_intake.set(0);
+      m_myRobot.arcadeDrive(-0.5, 0);
+      m_intakeArm.set(-0.4);
     } else {
-      m_leftMotor.set(0);
-      m_rightMotor.set(0);
+      m_myRobot.arcadeDrive(0, 0);
+      m_intakeArm.set(0);
     }
   }
 }
