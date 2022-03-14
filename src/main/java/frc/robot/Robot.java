@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -14,11 +15,16 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
   //variables galore
+
+  private PowerDistribution mainPDB;
+
   private DifferentialDrive m_myRobot;
+  private DifferentialDrive m_myRobot2;
   
   private Joystick driveStick;
   private XboxController armGamepad;
@@ -32,6 +38,8 @@ public class Robot extends TimedRobot {
   private CANSparkMax m_rightMotor;
   private CANSparkMax m_leftArm;
   private CANSparkMax m_rightArm;
+  private CANSparkMax m_leftMotor2;
+  private CANSparkMax m_rightMotor2;
 
   private PWMSparkMax m_intake;
   private VictorSP m_intakeArm;
@@ -47,13 +55,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    mainPDB = new PowerDistribution(0, ModuleType.kCTRE);
+
     m_leftMotor = new CANSparkMax(leftDriveID, MotorType.kBrushless);
     m_rightMotor = new CANSparkMax(rightDriveID, MotorType.kBrushless);
+    m_leftMotor2 = new CANSparkMax(6, MotorType.kBrushless);
+    m_rightMotor2 = new CANSparkMax(5, MotorType.kBrushless);
     
     m_leftArm = new CANSparkMax(leftArmID, MotorType.kBrushless);
     m_rightArm = new CANSparkMax(rightArmID, MotorType.kBrushless);
-    m_intakeArm = new VictorSP(8); //pwm cause mentor asked for it
-    m_intake = new PWMSparkMax(9); //pwm cause mentor asked for it
+    m_intakeArm = new VictorSP(8);
+    m_intake = new PWMSparkMax(9);
 
     m_rightArm.setOpenLoopRampRate(0.1); //ramp rate so the motor cant stall when jumping to full power
     m_leftArm.setOpenLoopRampRate(0.1);
@@ -63,16 +75,23 @@ public class Robot extends TimedRobot {
     m_leftArm.setIdleMode(IdleMode.kBrake);
 
     m_myRobot = new DifferentialDrive(m_leftMotor, m_rightMotor);
+    m_myRobot2 = new DifferentialDrive(m_leftMotor2, m_rightMotor2);
+    
     m_myRobot.setDeadband(0.05);
+    m_myRobot2.setDeadband(0.05);
 
     driveStick = new Joystick(0); //big joystick thing
     armGamepad = new XboxController(1); //small standard console controller
     
     m_leftArm.setInverted(true); // backwards, to add more confusion
     m_leftMotor.setInverted(false);
+    m_leftMotor2.setInverted(false);
     m_rightMotor.setInverted(true);
+    m_rightMotor2.setInverted(true);
 
     CameraServer.startAutomaticCapture(); //woo I have eyes
+
+    SmartDashboard.putNumber("intakeWinchCurrent", 0);
 
     SmartDashboard.putBoolean("driveEnabled", true);
     SmartDashboard.putBoolean("armsEnabled", true);
@@ -100,6 +119,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("intakeWinchCurrent", mainPDB.getCurrent(3));
+
     SmartDashboard.putNumber("m_leftArm", m_leftArm.get());
     SmartDashboard.putNumber("m_rightArm", m_rightArm.get());
     SmartDashboard.putNumber("m_leftMotor", m_leftMotor.get());
@@ -110,10 +131,13 @@ public class Robot extends TimedRobot {
     double speedController = driveStick.getRawAxis(3); //little "dial" thing on the front of the controller
     double speed1 = speedController - 1; //maths
     double speed = speed1 / 2; //more maths
+    SmartDashboard.putNumber("speedController", speed * -1);
 
     if(SmartDashboard.getBoolean("driveEnabled", true) == true) {
       m_myRobot.arcadeDrive(driveStick.getY() * speed, -driveStick.getZ() * speed, true); // Use twist for turning.  Square inputs for better control at low speed.
+      m_myRobot2.arcadeDrive(driveStick.getY() * speed, -driveStick.getZ() * speed, true);
     } else {
+      m_myRobot.arcadeDrive(0, 0);
       m_myRobot.arcadeDrive(0, 0);
     }
 
@@ -155,6 +179,8 @@ public class Robot extends TimedRobot {
     double intakeArmPowerOut = 0;
 
     double armSpeed = SmartDashboard.getNumber("armSpeedControl", 0.5);
+
+    double teleopElapsed = teleopTimer.get();
 
     if(d_armUp || d_armDown) {
       if(d_armUp) {
@@ -231,8 +257,10 @@ public class Robot extends TimedRobot {
     } else if(autoTimeElapsed < 4.5) {
       m_intake.set(0);
       m_myRobot.arcadeDrive(-0.5, 0);
+      m_myRobot2.arcadeDrive(-0.5, 0);
       m_intakeArm.set(-0.4);
     } else {
+      m_myRobot.arcadeDrive(0, 0);
       m_myRobot.arcadeDrive(0, 0);
       m_intakeArm.set(0);
     }
