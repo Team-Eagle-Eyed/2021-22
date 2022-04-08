@@ -69,8 +69,7 @@ public class Robot extends TimedRobot {
 
     m_rightArm.setOpenLoopRampRate(0.1); //ramp rate so the motor cant stall when jumping to full power
     m_leftArm.setOpenLoopRampRate(0.1);
-    m_rightMotor.setOpenLoopRampRate(0.1);
-    m_leftMotor.setOpenLoopRampRate(0.1);
+
     m_rightArm.setIdleMode(IdleMode.kBrake); //brake so the arms don't coast past the limit switches
     m_leftArm.setIdleMode(IdleMode.kBrake);
 
@@ -103,7 +102,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("m_intakeArm", 0);
     SmartDashboard.putNumber("m_intake", 0);
     SmartDashboard.putNumber("speedController", 0);
-    SmartDashboard.putNumber("armSpeedControl", 0.5);
+
+    SmartDashboard.putNumber("speedCap", 1);
+    SmartDashboard.putNumber("intake", 0.9);
+    SmartDashboard.putNumber("autoDelay", 0);
   }
 
   @Override
@@ -115,6 +117,10 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     teleopTimer = new Timer();
     teleopTimer.start();
+    m_rightMotor.setOpenLoopRampRate(0.12);
+    m_leftMotor.setOpenLoopRampRate(0.12);
+    m_rightMotor2.setOpenLoopRampRate(0.12);
+    m_leftMotor2.setOpenLoopRampRate(0.12);
   }
 
   @Override
@@ -132,10 +138,11 @@ public class Robot extends TimedRobot {
     double speed1 = speedController - 1; //maths
     double speed = speed1 / 2; //more maths
     SmartDashboard.putNumber("speedController", speed * -1);
+    double speedCap = SmartDashboard.getNumber("speedCap", 0.8);
 
     if(SmartDashboard.getBoolean("driveEnabled", true) == true) {
-      m_myRobot.arcadeDrive(driveStick.getY() * speed, -driveStick.getZ() * speed, true); // Use twist for turning.  Square inputs for better control at low speed.
-      m_myRobot2.arcadeDrive(driveStick.getY() * speed, -driveStick.getZ() * speed, true);
+      m_myRobot.arcadeDrive(driveStick.getY() * speed * speedCap, -driveStick.getZ() * speed * speedCap * 0.75, true); // Use twist for turning.  Square inputs for better control at low speed.
+      m_myRobot2.arcadeDrive(driveStick.getY() * speed * speedCap, -driveStick.getZ() * speed * speedCap * 0.75, true);
     } else {
       m_myRobot.arcadeDrive(0, 0);
       m_myRobot.arcadeDrive(0, 0);
@@ -178,23 +185,36 @@ public class Robot extends TimedRobot {
     double intakePowerOut = 0;
     double intakeArmPowerOut = 0;
 
-    double armSpeed = SmartDashboard.getNumber("armSpeedControl", 0.5);
+    double armSpeed = SmartDashboard.getNumber("intakeArmSpeedControl", 0.5);
 
-    double teleopElapsed = teleopTimer.get();
+/*     double teleopElapsed = teleopTimer.get();
+    double timeLimitExpires;
+    double intakeArmSpeedMult;
+    if(mainPDB.getCurrent(3) >= 12) { //if amperage is above a threshhold
+      timeLimitExpires = teleopElapsed + 1;
+    } else {
+      timeLimitExpires = teleopElapsed;
+    }
 
-    if(d_armUp || d_armDown) {
-      if(d_armUp) {
-        intakeArmPowerOut = armSpeed;
-      } else if(d_armDown) {
-        intakeArmPowerOut =-armSpeed;
+    if(timeLimitExpires < teleopElapsed) {
+      intakeArmSpeedMult = 0.3;
+    } else {
+      intakeArmSpeedMult = 1;
+    } */
+
+    if(o_armUp || o_armDown) {
+      if(o_armUp) {
+        intakeArmPowerOut = armSpeed/*  * intakeArmSpeedMult */;
+      } else if(o_armDown) {
+        intakeArmPowerOut =-armSpeed/*  * intakeArmSpeedMult */;
       } else {
         intakeArmPowerOut = -0.05;
 //        m_intakeArm.setVoltage(-10);
       }
     } else {
-      if(o_armUp) {
+      if(d_armUp && driveStick.getRawButton(7) == true) {
         intakeArmPowerOut = armSpeed;
-      } else if(o_armDown) {
+      } else if(d_armDown && driveStick.getRawButton(7) == true) {
         intakeArmPowerOut = -armSpeed;
       } else {
         intakeArmPowerOut = -0.05;
@@ -209,18 +229,18 @@ public class Robot extends TimedRobot {
     }
 
 
-    if(d_intakeIn || d_intakeOut) {
-      if(d_intakeIn) {
+    if(o_intakeIn || o_intakeOut) {
+      if(o_intakeIn) {
         intakePowerOut = 1;
-      } else if(d_intakeOut) {
+      } else if(o_intakeOut) {
         intakePowerOut = -1;
       } else {
         intakePowerOut = 0;
       }
     } else {
-      if(o_intakeIn) {
+      if(d_intakeIn && driveStick.getRawButton(7) == true) {
         intakePowerOut = 1;
-      } else if(o_intakeOut) {
+      } else if(d_intakeOut && driveStick.getRawButton(7) == true) {
         intakePowerOut = -1;
       } else {
         intakePowerOut = 0;
@@ -238,6 +258,10 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     autoTimer = new Timer();
     autoTimer.start();
+    m_rightMotor.setOpenLoopRampRate(0.2);
+    m_leftMotor.setOpenLoopRampRate(0.2);
+    m_rightMotor2.setOpenLoopRampRate(0.2);
+    m_leftMotor2.setOpenLoopRampRate(0.2);
   }
 
 
@@ -249,20 +273,25 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("m_rightMotor", m_rightMotor.get());
     SmartDashboard.putNumber("m_intakeArm", m_intakeArm.get());
     SmartDashboard.putNumber("m_intake", m_intake.get());
+    double getAutoDelay = SmartDashboard.getNumber("autoDelay", 0);
     
     //get a time for autonomous start to do events based on time later
     double autoTimeElapsed = autoTimer.get(); //get time since start of auto
-    if(autoTimeElapsed < 1) { //move for 3 seconds
+    if(autoTimeElapsed < getAutoDelay) {
+      m_myRobot.feed();
+      m_myRobot2.feed();
+    } else if(autoTimeElapsed < 1 + getAutoDelay) { //move for 3 seconds
       m_intake.set(-1);
-    } else if(autoTimeElapsed < 4.5) {
+    } else if(autoTimeElapsed < 3 + getAutoDelay) {
       m_intake.set(0);
-      m_myRobot.arcadeDrive(-0.5, 0);
-      m_myRobot2.arcadeDrive(-0.5, 0);
-      m_intakeArm.set(-0.4);
+      m_myRobot.arcadeDrive(-0.7, 0);
+      m_myRobot2.arcadeDrive(-0.7, 0);
+      m_intakeArm.set(-0.5);
     } else {
       m_myRobot.arcadeDrive(0, 0);
       m_myRobot.arcadeDrive(0, 0);
       m_intakeArm.set(0);
+      m_intake.set(0);
     }
   }
 }

@@ -73,6 +73,17 @@
               "Range/Max": 1.0,
               "Visuals/Show value": true
             }
+          },
+          "10,3": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/autoDelay",
+              "_title": "autoDelay"
+            }
           }
         }
       }
@@ -297,6 +308,44 @@
                   "_type": "Text View",
                   "_source0": "network_table:///LiveWindow/Ungrouped/VictorSP[8]/Value",
                   "_title": "VictorSP[8]/Value"
+                },
+                {
+                  "_type": "Differential Drivebase",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DifferentialDrive[2]",
+                  "_title": "LiveWindow/Ungrouped/DifferentialDrive[2]",
+                  "Wheels/Number of wheels": 4,
+                  "Wheels/Wheel diameter": 80.0,
+                  "Visuals/Show velocity vectors": true
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan10",
+                  "_title": "LiveWindow/Ungrouped/PowerDistribution[0]/Chan10"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan11",
+                  "_title": "LiveWindow/Ungrouped/PowerDistribution[0]/Chan11"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan13",
+                  "_title": "LiveWindow/Ungrouped/PowerDistribution[0]/Chan13"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan15",
+                  "_title": "LiveWindow/Ungrouped/PowerDistribution[0]/Chan15"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan14",
+                  "_title": "LiveWindow/Ungrouped/PowerDistribution[0]/Chan14"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[0]/Chan12",
+                  "_title": "LiveWindow/Ungrouped/PowerDistribution[0]/Chan12"
                 }
               ]
             }
@@ -442,14 +491,6 @@
               "Layout/Number of rows": 2,
               "Layout/Label position": "BOTTOM",
               "_children": {
-                "0,0": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/m_leftMotor",
-                  "_title": "m_leftMotor",
-                  "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
                 "0,1": {
                   "_type": "Simple Dial",
                   "_source0": "network_table:///SmartDashboard/m_leftArm",
@@ -463,14 +504,6 @@
                   "_source0": "network_table:///SmartDashboard/m_rightArm",
                   "_title": "m_rightArm",
                   "Range/Min": -1.0,
-                  "Range/Max": 1.0,
-                  "Visuals/Show value": true
-                },
-                "3,1": {
-                  "_type": "Simple Dial",
-                  "_source0": "network_table:///SmartDashboard/speedController",
-                  "_title": "speedController",
-                  "Range/Min": 0.0,
                   "Range/Max": 1.0,
                   "Visuals/Show value": true
                 },
@@ -494,6 +527,22 @@
                   "_type": "Simple Dial",
                   "_source0": "network_table:///SmartDashboard/m_rightMotor",
                   "_title": "m_rightMotor",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "0,0": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/m_leftMotor",
+                  "_title": "m_leftMotor",
+                  "Range/Min": -1.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                },
+                "3,1": {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/speedController",
+                  "_title": "speedController",
                   "Range/Min": -1.0,
                   "Range/Max": 1.0,
                   "Visuals/Show value": true
@@ -559,28 +608,48 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "7,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/d_armUp",
-              "_title": "d_armUp",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "8,1": {
+          "9,1": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/armSpeedControl",
-              "_title": "armSpeedControl"
+              "_source0": "network_table:///SmartDashboard/intakeWinchCurrent",
+              "_title": "intakeWinchCurrent"
+            }
+          },
+          "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/speedCap",
+              "_title": "speedCap"
+            }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/intakeArmSpeedControl",
+              "_title": "intakeArmSpeedControl"
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/autoDelay",
+              "_title": "autoDelay"
             }
           }
         }
