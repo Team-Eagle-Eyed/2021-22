@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -67,7 +68,7 @@ public class Robot extends TimedRobot {
     m_intakeArm = new VictorSP(8);
     m_intake = new PWMSparkMax(9);
 
-    m_rightArm.setOpenLoopRampRate(0.1); //ramp rate so the motor cant stall when jumping to full power
+    m_rightArm.setOpenLoopRampRate(0.1); //ramp rate so the motor can't stall when jumping to full power
     m_leftArm.setOpenLoopRampRate(0.1);
 
     m_rightArm.setIdleMode(IdleMode.kBrake); //brake so the arms don't coast past the limit switches
@@ -76,8 +77,8 @@ public class Robot extends TimedRobot {
     m_myRobot = new DifferentialDrive(m_leftMotor, m_rightMotor);
     m_myRobot2 = new DifferentialDrive(m_leftMotor2, m_rightMotor2);
     
-    m_myRobot.setDeadband(0.05);
-    m_myRobot2.setDeadband(0.05);
+    m_myRobot.setDeadband(0.1);
+    m_myRobot2.setDeadband(0.1);
 
     driveStick = new Joystick(0); //big joystick thing
     armGamepad = new XboxController(1); //small standard console controller
@@ -95,6 +96,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("driveEnabled", true);
     SmartDashboard.putBoolean("armsEnabled", true);
     SmartDashboard.putBoolean("intakeEnabled", true);
+    SmartDashboard.putBoolean("isReady", false);
+    SmartDashboard.putString("Message", "Please wait...");
     SmartDashboard.putNumber("m_leftArm", 0);
     SmartDashboard.putNumber("m_rightArm", 0);
     SmartDashboard.putNumber("m_leftMotor", 0);
@@ -104,13 +107,26 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("speedController", 0);
 
     SmartDashboard.putNumber("speedCap", 1);
-    SmartDashboard.putNumber("intake", 0.9);
+    SmartDashboard.putNumber("intakeArmSpeedControl", 1);
     SmartDashboard.putNumber("autoDelay", 0);
   }
 
   @Override
   public void disabledPeriodic() {
-    //nothing yet
+    SmartDashboard.updateValues();
+    if(
+        SmartDashboard.getBoolean("driveEnabled", true) &&
+        SmartDashboard.getBoolean("armsEnabled", true) &&
+        SmartDashboard.getBoolean("intakeEnabled", true) &&
+        DriverStation.isJoystickConnected(0) &&
+        DriverStation.isJoystickConnected(1)
+      ) {
+      SmartDashboard.putBoolean("isReady", true);
+      SmartDashboard.putString("Message", "Good to go! Approximate match time remaining: " + DriverStation.getMatchTime());
+    } else {
+      SmartDashboard.putBoolean("isReady", false);
+      SmartDashboard.putString("Message", "Check controller connections and make sure all your sections are enabled.");
+    }
   }
 
   @Override
@@ -125,6 +141,20 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    if(
+        SmartDashboard.getBoolean("driveEnabled", true) &&
+        SmartDashboard.getBoolean("armsEnabled", true) &&
+        SmartDashboard.getBoolean("intakeEnabled", true) &&
+        DriverStation.isJoystickConnected(0) &&
+        DriverStation.isJoystickConnected(1)
+      ) {
+      SmartDashboard.putBoolean("isReady", true);
+      SmartDashboard.putString("Message", "Good to go! Approximate match time remaining: " + DriverStation.getMatchTime());
+    } else {
+      SmartDashboard.putBoolean("isReady", false);
+      SmartDashboard.putString("Message", "Check controller connections and make sure all your sections are enabled.");
+    }
+
     SmartDashboard.putNumber("intakeWinchCurrent", mainPDB.getCurrent(3));
 
     SmartDashboard.putNumber("m_leftArm", m_leftArm.get());
@@ -180,27 +210,12 @@ public class Robot extends TimedRobot {
     boolean o_intakeOut = armGamepad.getBButton();
     boolean d_armUp = (driveStick.getPOV() <= 45 || driveStick.getPOV() >= 315) && driveStick.getPOV() != -1;
     boolean d_armDown = driveStick.getPOV() >= 135 && driveStick.getPOV() <=225;
-    boolean d_intakeIn = driveStick.getRawButton(2);
-    boolean d_intakeOut = driveStick.getRawButton(1);
+    boolean d_intakeIn = driveStick.getRawButton(1);
+    boolean d_intakeOut = driveStick.getRawButton(2);
     double intakePowerOut = 0;
     double intakeArmPowerOut = 0;
 
-    double armSpeed = SmartDashboard.getNumber("intakeArmSpeedControl", 0.5);
-
-/*     double teleopElapsed = teleopTimer.get();
-    double timeLimitExpires;
-    double intakeArmSpeedMult;
-    if(mainPDB.getCurrent(3) >= 12) { //if amperage is above a threshhold
-      timeLimitExpires = teleopElapsed + 1;
-    } else {
-      timeLimitExpires = teleopElapsed;
-    }
-
-    if(timeLimitExpires < teleopElapsed) {
-      intakeArmSpeedMult = 0.3;
-    } else {
-      intakeArmSpeedMult = 1;
-    } */
+    double armSpeed = SmartDashboard.getNumber("intakeArmSpeedControl", 1);
 
     if(o_armUp || o_armDown) {
       if(o_armUp) {
@@ -208,13 +223,13 @@ public class Robot extends TimedRobot {
       } else if(o_armDown) {
         intakeArmPowerOut =-armSpeed/*  * intakeArmSpeedMult */;
       } else {
-        intakeArmPowerOut = -0.05;
+        intakeArmPowerOut = -0.07;
 //        m_intakeArm.setVoltage(-10);
       }
     } else {
-      if(d_armUp && driveStick.getRawButton(7) == true) {
+      if(d_armUp/*  && driveStick.getRawButton(7) == true */) {
         intakeArmPowerOut = armSpeed;
-      } else if(d_armDown && driveStick.getRawButton(7) == true) {
+      } else if(d_armDown/*  && driveStick.getRawButton(7) == true */) {
         intakeArmPowerOut = -armSpeed;
       } else {
         intakeArmPowerOut = -0.05;
@@ -222,29 +237,31 @@ public class Robot extends TimedRobot {
       }
     }
 
-    if(SmartDashboard.getBoolean("intakeEnabled", true) == true) { //if intake enabled, set intake arm speed
-      m_intakeArm.set(intakeArmPowerOut);
-    } else {
-      m_intakeArm.set(0);
-    }
-
 
     if(o_intakeIn || o_intakeOut) {
       if(o_intakeIn) {
         intakePowerOut = 1;
+        intakeArmPowerOut = -0.15;
       } else if(o_intakeOut) {
         intakePowerOut = -1;
       } else {
         intakePowerOut = 0;
       }
     } else {
-      if(d_intakeIn && driveStick.getRawButton(7) == true) {
+      if(d_intakeIn/*  && driveStick.getRawButton(7) == true */) {
         intakePowerOut = 1;
-      } else if(d_intakeOut && driveStick.getRawButton(7) == true) {
+        intakeArmPowerOut = -0.15;
+      } else if(d_intakeOut/*  && driveStick.getRawButton(7) == true */) {
         intakePowerOut = -1;
       } else {
         intakePowerOut = 0;
       }
+    }
+
+    if(SmartDashboard.getBoolean("intakeEnabled", true) == true) { //if intake enabled, set intake arm speed
+      m_intakeArm.set(intakeArmPowerOut);
+    } else {
+      m_intakeArm.set(0);
     }
 
     if(SmartDashboard.getBoolean("intakeEnabled", true) == true) { //if intake enabled, set intake speed

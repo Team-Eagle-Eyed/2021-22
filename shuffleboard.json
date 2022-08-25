@@ -80,9 +80,37 @@
               2
             ],
             "content": {
-              "_type": "Text View",
+              "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/autoDelay",
-              "_title": "autoDelay"
+              "_title": "autoDelay",
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 13.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
+            }
+          },
+          "12,0": {
+            "size": [
+              6,
+              5
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/isReady",
+              "_title": "isReady",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "11,5": {
+            "size": [
+              7,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Message",
+              "_title": "Message"
             }
           }
         }
@@ -632,7 +660,7 @@
           },
           "5,2": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -641,7 +669,7 @@
               "_title": "intakeArmSpeedControl"
             }
           },
-          "6,2": {
+          "7,2": {
             "size": [
               1,
               1
@@ -651,15 +679,50 @@
               "_source0": "network_table:///SmartDashboard/autoDelay",
               "_title": "autoDelay"
             }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/isReady",
+              "_title": "isReady",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/intake",
+              "_title": "intake"
+            }
+          },
+          "8,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Message",
+              "_title": "Message"
+            }
           }
         }
       }
     }
   ],
   "windowGeometry": {
-    "x": -4.800000190734863,
-    "y": 0.800000011920929,
+    "x": -6.400000095367432,
+    "y": 0.0,
     "width": 1547.199951171875,
-    "height": 628.0
+    "height": 630.4000244140625
   }
 }
